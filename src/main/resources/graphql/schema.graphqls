@@ -1,0 +1,112 @@
+type Book
+{
+    id: ID
+    title: String
+    description: String
+    price: Float
+    pages: Int
+    author: Author
+    category: Category
+}
+
+input BookInput
+{
+    title: String
+    description: String
+    price: Float
+    pages: Int
+    authorId: ID
+    categoryId: ID
+}
+
+type Author
+{
+    id: ID
+    name: String
+    bio: String
+    books: [Book]
+}
+
+input AuthorInput
+{
+    name: String
+    bio: String
+
+}
+
+input CategoryInput
+{
+    name: String!
+    description: String
+
+}
+
+input PageableCategoryInput
+{
+    page: Int=1,
+    size: Int=2,
+    sortBy: String="name",
+    ascending: Boolean=true
+}
+
+type PageableCategoryOutput
+{
+    categories: [Category],
+    pageNumber: Int,
+    pageSize: Int,
+    totalElements: Int,
+    totalPages: Int
+}
+
+type  Category
+{
+    id: ID!
+    name: String
+    description: String
+    books: [Book]
+}
+
+type BooksCountResponse
+{
+    count: Int,
+    name: String
+}
+
+type Query
+{
+    getAllBooks:[Book]
+    getBookById(bookId: ID): Book
+
+    getAllAuthors:[Author]
+    getAuthorById(authorId: ID): Author
+
+    getAllCategories: [Category]
+    getCategoryById(categoryId: ID): Category
+    getAllPaginatedCategories(pageableCategoryInput: PageableCategoryInput):PageableCategoryOutput
+    getBooksCountPerCategory: [BooksCountResponse]
+
+    #    countBooksPerAuthor
+    #    countBooksPerCategory
+    #    categoryHavingMaximumBooks
+
+}
+
+type  Mutation
+{
+    saveBook(book: BookInput): Book
+    updateBook(bookId: ID, book: BookInput): Book
+    deleteBook(bookId: ID): Boolean
+
+    saveAuthor(author: AuthorInput): Author
+    updateAuthor(authorId: ID!, author: AuthorInput): Author
+    deleteAuthor(authorId: ID!): Boolean
+    addBookToAuthor(authorId: ID, book: BookInput): Author
+    removeBookFromAuthor(authorId: ID, book: BookInput): Author
+
+    saveCategory(category: CategoryInput): Category
+    updateCategory(categoryId: ID!, category: CategoryInput): Category
+    deleteCategory(categoryId: ID!): Boolean
+    addBookToCategory(categoryId: ID, book: BookInput): Category
+    removeBookFromCategory(categoryId: ID, book: BookInput): Category
+
+}
